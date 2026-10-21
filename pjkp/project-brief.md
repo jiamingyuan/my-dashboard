@@ -20,6 +20,8 @@
 
 2026-10-21 用户追加要求使用已有 debian:trixie，创建名为 my-dashboard 的容器并放入项目运行。首次通过 Nginx 完成静态运行；随后用户要求直接在容器里开发并删除宿主副本，项目现以 `my-dashboard-project` 持久化卷保存在容器 `/app/my-dashboard`。容器包含 Node、Git、Python 和 Chromium 测试工具，Vite 提供热更新，访问 http://localhost:8080。该操作没有加入业务模块、后端或公网托管，也不代表 V0.1 已验收。
 
+2026-10-21 用户指定上传到 [GitHub 仓库](https://github.com/jiamingyuan/my-dashboard)。项目已在容器内初始化 Git 并上传 main，首次项目内容提交为 a099f26ff560fd6b7023d20c0a7516b6d7867a9b；远端 290 个文件已与本地 Git 清单核对一致。源码、配置与 pjkp 已归档，依赖和本机运行产物留在项目卷中。后续仍在容器内开发；上传不代表网站托管或 V0.1 验收。
+
 ### 项目价值
 
 - 将自己做的多个工具集中到同一个网站入口。

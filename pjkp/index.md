@@ -3,7 +3,7 @@
 ## 项目入口
 
 - 项目：my-dashboard
-- GitHub 仓库：[jiamingyuan/my-dashboard](https://github.com/jiamingyuan/my-dashboard)，目标分支 `main`。
+- GitHub 仓库：[jiamingyuan/my-dashboard](https://github.com/jiamingyuan/my-dashboard)，分支 `main`；已于 2026-10-21 按用户要求完成首次上传，版本仍待验收。
 - 项目根目录：Docker 容器 `my-dashboard` 内 `/app/my-dashboard`；持久化卷 `my-dashboard-project`，宿主源码副本已按用户要求迁出。
 - 当前阶段：V0.1「前端基础框架」已实现并通过本版验证，待用户验收；根据用户追加要求，已迁入本机 my-dashboard Debian 开发容器，后续在容器内开发，版本未关闭。
 - 前端技术栈：React + TypeScript + Vite（2026-10-20 用户在当前对话确认改为 React）。
