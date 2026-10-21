@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="night">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="my-dashboard，你的个人工作空间。" />
+    <title>my-dashboard · 个人工作空间</title>
+    <style>
+      html { background: #181916; color-scheme: dark; }
+      html[data-theme='morning'] { background: #eee9df; color-scheme: light; }
+    </style>
+    <script>
+      // Set the theme before styles and React render, including when storage is denied.
+      try {
+        if (localStorage.getItem('my-dashboard.theme') === 'morning') {
+          document.documentElement.dataset.theme = 'morning';
+        }
+      } catch { /* Default night theme remains usable without storage. */ }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

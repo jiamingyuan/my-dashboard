@@ -1,0 +1,13 @@
+node_modules
+dist
+test-results
+playwright-report
+.git
+.DS_Store
+*.tsbuildinfo
+*.local
+.env
+.env.*
+.aws
+.codex
+.agents

@@ -1,0 +1,4 @@
+.switch { display: flex; flex: 0 0 152px; width: 152px; height: 40px; padding: 4px; border-radius: var(--radius-sm); background: var(--panel); }
+.switch button { flex: 0 0 72px; height: 32px; padding: 4px 12px; border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--text-secondary); font-size: 14px; font-weight: 500; line-height: 22px; cursor: pointer; }
+.switch button[aria-pressed='true'] { background: var(--raised); color: var(--accent-text); }
+.switch button:hover { color: var(--accent-text); }

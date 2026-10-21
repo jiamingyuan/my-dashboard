@@ -1,0 +1,26 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.DS_Store
+*.local
+*.tsbuildinfo
+
+# Local environment, credentials and tooling state
+.env
+.env.*
+!.env.example
+!.env.*.example
+.aws/
+.codex/
+.agents/
+__pycache__/
+*.py[cod]
+
+# Local container migration evidence remains in the project volume
+ops/development/*.tar.gz
+ops/development/pre-migration-manifest.json
+ops/development/migration-result.json
+ops/development/browser-hmr-result.json
+ops/development/published-hmr-result.json
+ops/debian/initial-browser-result.json

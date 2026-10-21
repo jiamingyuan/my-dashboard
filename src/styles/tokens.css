@@ -1,0 +1,32 @@
+:root {
+  --font-body: 'Noto Sans SC', sans-serif;
+  --font-latin: 'Manrope', sans-serif;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --canvas: #181916;
+  --panel: #242521;
+  --raised: #30312c;
+  --heading: #eee9df;
+  --text-primary: #d7cfc0;
+  --text-secondary: #948e84;
+  --accent-bg: #b98e55;
+  --accent-text: #d0b173;
+  --on-accent: #181916;
+  --sand: #c7b79d;
+  --avatar-text: #181916;
+  --border: #30312c;
+  color-scheme: dark;
+}
+:root[data-theme='morning'] {
+  --canvas: #eee9df;
+  --panel: #f8f5ef;
+  --raised: #e7e0d4;
+  --heading: #181916;
+  --text-primary: #30312c;
+  --text-secondary: #625c52;
+  --accent-bg: #805d35;
+  --accent-text: #805d35;
+  --on-accent: #eee9df;
+  --border: #d7cfc0;
+  color-scheme: light;
+}

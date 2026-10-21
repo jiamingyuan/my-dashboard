@@ -1,0 +1,21 @@
+name: my-dashboard
+
+services:
+  web:
+    image: my-dashboard:development
+    build:
+      context: .
+      dockerfile: ops/development/Dockerfile
+      pull: false
+    container_name: my-dashboard
+    init: true
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - project:/app/my-dashboard
+    restart: unless-stopped
+
+volumes:
+  project:
+    name: my-dashboard-project
+    external: true

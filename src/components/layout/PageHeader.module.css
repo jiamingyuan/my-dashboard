@@ -1,0 +1,8 @@
+.header { min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+.header h1 { margin: 0 0 4px; color: var(--heading); font-size: 28px; font-weight: 500; line-height: 40px; }
+.description { margin: 0; color: var(--text-secondary); font-size: 14px; line-height: 24px; }
+.welcome { flex: 0 0 250px; font-size: 14px; line-height: 24px; }
+.welcome p { margin: 0; }
+.welcome .small { color: var(--text-secondary); font-size: 12px; line-height: 20px; }
+@media (max-width: 1199px) { .header { flex-wrap: wrap; gap: 16px; } }
+@media (max-width: 767px) { .header { align-items: flex-start; } .welcome { flex-basis: 100%; } }

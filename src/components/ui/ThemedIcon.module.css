@@ -1,0 +1,8 @@
+.icon { display: block; position: relative; flex: none; }
+.icon img { position: absolute; display: block; max-width: none; }
+.brand_morning, .brand_night { width: 20px; height: 20px; }
+.brand_morning img { transform: scale(0.8333333333); transform-origin: top left; }
+.brand_night img { left: 0; top: 0; }
+.home_morning { width: 24px; height: 24px; }
+.home_night { width: 20px; height: 20px; }
+.home_night img { left: 2.2px; top: 1.2px; }
