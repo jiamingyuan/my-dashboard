@@ -1,10 +1,12 @@
 import { NavLink } from 'react-router'
-import { toolNavigation, workspaceNavigation } from '../../app/navigation'
+import { workspaceNavigation } from '../../app/navigation'
+import { useModuleRegistry } from '../../modules/useModuleRegistry'
 import { ThemedIcon } from '../ui/ThemedIcon'
 import { UserSummary } from './UserSummary'
 import styles from './Sidebar.module.css'
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
+  const { modules, status, reload } = useModuleRegistry()
   return (
     <div className={styles.sidebar}>
       <div className={styles.brand}>
@@ -21,7 +23,14 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
       </nav>
       <nav aria-label="我的工具" className={styles.group}>
         <p className={styles.caption}>我的工具</p>
-        {toolNavigation.length === 0 ? <p className={styles.noTools}>暂无工具</p> : toolNavigation.map(item => <NavLink key={item.to} to={item.to} className={styles.link} onClick={onNavigate}>{item.label}</NavLink>)}
+        {status === 'loading' ? <p className={styles.noTools}>正在加载工具</p>
+          : status === 'error' ? <><p className={styles.noTools}>工具列表暂时不可用</p><button className={styles.retry} type="button" onClick={reload}>重新加载工具列表</button></>
+          : modules.length === 0 ? <p className={styles.noTools}>暂无工具</p>
+          : modules.map(item => (
+            <NavLink key={item.id} to={'/tools/' + item.id}
+              className={({ isActive }) => styles.link + (isActive ? ' ' + styles.selected : '')}
+              onClick={onNavigate}>{item.title}</NavLink>
+          ))}
       </nav>
       <div className={styles.userArea}><UserSummary /></div>
     </div>

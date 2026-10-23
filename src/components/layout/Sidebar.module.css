@@ -14,3 +14,4 @@
 .username { margin: 0; font-size: 14px; font-weight: 500; line-height: 22px; }
 .account { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 20px; }
 @media (max-width: 767px) { .sidebar { min-height: calc(100dvh - 56px); padding-top: 16px; } }
+.retry { margin: 0 12px; padding: 4px 0; border: 0; background: transparent; color: var(--accent-text); text-align: left; cursor: pointer; }

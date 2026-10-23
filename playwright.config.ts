@@ -14,9 +14,17 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  webServer: {
-    command: 'npm run preview -- --host 127.0.0.1 --port 4175 --strictPort',
-    url: 'http://127.0.0.1:4175',
-    reuseExistingServer: false,
-  },
+  webServer: [
+    {
+      command: 'npm run preview -- --host 127.0.0.1 --port 4175 --strictPort',
+      url: 'http://127.0.0.1:4175',
+      reuseExistingServer: false,
+    },
+    {
+      command: 'npm run test:remote',
+      url: 'http://127.0.0.1:4176/remoteEntry.js',
+      reuseExistingServer: false,
+      timeout: 60_000,
+    },
+  ],
 })

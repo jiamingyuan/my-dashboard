@@ -1,39 +1,30 @@
 # my-dashboard 项目入口
 
-## 项目入口
+更新：2026-10-23。当前版本：**V0.2 · Module Federation 接入**。
 
-- 项目：my-dashboard
-- GitHub 仓库：[jiamingyuan/my-dashboard](https://github.com/jiamingyuan/my-dashboard)，分支 `main`；已于 2026-10-21 按用户要求完成首次上传，版本仍待验收。
-- 项目根目录：Docker 容器 `my-dashboard` 内 `/app/my-dashboard`；持久化卷 `my-dashboard-project`，宿主源码副本已按用户要求迁出。
-- 当前阶段：V0.1「前端基础框架」已实现并通过本版验证，待用户验收；根据用户追加要求，已迁入本机 my-dashboard Debian 开发容器，后续在容器内开发，版本未关闭。
-- 前端技术栈：React + TypeScript + Vite（2026-10-20 用户在当前对话确认改为 React）。
-- 配置：[config.toml](config.toml)（仅预留，不参与运行）
+V0.1 前端外壳已实现，V0.2 在其上增加远程模块接入能力。默认工具清单仍为空，未接入 AI 日报、背单词或 media-keeper；没有宿主后端。两版均未记录用户明确验收。
 
-## 文件导航
+- [规则](rules.md)：当前没有额外的项目专属约定。
+- [项目简介](project-brief.md)：项目方向、已有能力和待确定事项。
+- [架构](architecture.md)：当前宿主、远程模块、主题与部署边界。
+- [开发与运行](../README.md)、[模块接入说明](../docs/modules.md)。
 
-- [项目简介](project-brief.md)：背景与功能。
-- [架构](architecture.md)：框架、机制与源码入口。
-- V0.1 前端基础框架：[需求](V0.1/requirements.md)、[执行方案](V0.1/spec.md)、[测试方案](V0.1/test-plan.md)。仅应用外壳，不加入任何业务模块。
-- [运行说明](../README.md)与 [V0.1 测试结果](V0.1/test-results.md)：实际源码入口、启动命令与检查证据。
-- [容器内开发](../ops/development/README.md)、[Compose 配置](../compose.yaml)、[迁移验证](../ops/development/VERIFICATION.md)：容器 my-dashboard，Vite 热更新，本机访问 http://localhost:8080；首次 Nginx 运行记录保留在 ops/debian。
-- Figma 界面草稿：[晨间模式](https://www.figma.com/design/P2EfZNJYj2PsdZLmaMzHMN?node-id=14-266) / [夜间模式](https://www.figma.com/design/P2EfZNJYj2PsdZLmaMzHMN?node-id=4-86)。每套主题包含总览和三个模块，均为可编辑设计图层，原型可切换主题并保留当前模块。
-- [规则](rules.md)：原则和边界。
-- [规划](roadmap.md)：愿景、里程碑、todo。
-- [日志](log.md)：行为历史。
+## 版本
 
-## 版本状态
+| 版本 | 内容 | 实际进展 | 迭代记录 |
+| --- | --- | --- | --- |
+| V0.1 | React 前端基础框架、双主题、搜索留白、空状态与响应式导航 | 2026-10-21 实现并验证；历史基线，未记录用户验收 | [V0.1](V0.1/iteration.md) |
+| V0.2 | Module Federation、运行时清单、动态导航与路由、主题传递、加载失败处理 | 2026-10-22 实现并通过 18 项 Chromium 测试；2026-10-23 用户指定版本号 | [V0.2](V0.2/iteration.md) |
 
-<!-- pjkp:versions:start -->
-最近完成版本：暂无
+## 当前环境与接续位置
 
-| 版本 | 状态 | 来源 |
-| --- | --- | --- |
-| V0.1 | awaiting-acceptance | [需求](V0.1/requirements.md) |
-<!-- pjkp:versions:end -->
+- 本机源码：`/Users/jiamingyuan/Desktop/ai-infra/my-dashboard`，React + TypeScript + Vite；Node 24 / npm，具体版本与命令见 README。
+- 运行容器：独立的 `my-dashboard`，官方 Nginx 镜像，静态文件在 `/usr/share/nginx/html`；`127.0.0.1:8080 → 80`，无 Volume。当前不是容器内 Vite 开发环境。
+- GitHub：`https://github.com/jiamingyuan/my-dashboard`。V0.1 历史基线为 `e56598edcf1a83a559a6adfc2dc317a5b1af77bb`；V0.2 源码、配置、测试和文档由 main 分支的本版提交共同记录。用户于 2026-10-23 指定同步至 GitHub main；实际同步状态可核对本地 HEAD 与远端 main。
+- 当前没有用户已指定但尚未完成的本版开发任务。真实子模块的源码、地址和接入时间尚未指定，不能将测试远程当成已接入业务工具。
 
-## 当前阻塞与待同步事项
+## 记录迁移
 
-- V0.1 已使用 React Router、CSS Modules 与 React Context 实现外壳、双主题及无工具空状态；依赖已锁定，源码位于 src/，启动方式见 README。
-- 后端、数据存储、登录和公网托管待确认；本机容器已经使用用户指定的 debian:trixie 运行，仅映射 127.0.0.1:8080。
-- AI 日报、背单词、media-keeper 均不加入 V0.1；未来接入方式和现有工具位置待后续确认。
-- 用户于 2026-10-21 授权执行 V0.1，代码和测试已完成；尚无用户验收记录，不关闭版本。Safari / Firefox 与生产托管未验证。
+2026-10-23 按用户要求迁移到新版 project-keeper：每个版本只保留 `iteration.md`；长期方向归简介，当前设计归架构，原 roadmap / log / 需求 / 方案 / 测试文件中的关键决定与真实结果归入对应版本。未启用的 `config.toml` 和旧状态指纹移除，不再沿用 plan/execute 或关闭事务。
+
+迁移前 11 份 pjkp 文件均与上述 Git 提交逐字一致，完整原文可通过 `git show e56598edcf1a83a559a6adfc2dc317a5b1af77bb:pjkp/原文件路径` 恢复。旧版 `ops/tooling/project-keeper/` 与 `ops/development/` 留作历史材料，不是当前记忆维护或运行入口。本次未创建 AGENTS.md，也未改变用户已移除项目约定的决定。
