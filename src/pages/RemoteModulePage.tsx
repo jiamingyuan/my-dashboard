@@ -67,7 +67,7 @@ export function RemoteModulePage() {
 
   return (
     <>
-      <PageHeader title={module.title} description={module.description ?? ''} />
+      <PageHeader compact title={module.title} description={module.description ?? ''} />
       <RemoteModuleContent key={module.id} module={module} />
     </>
   )

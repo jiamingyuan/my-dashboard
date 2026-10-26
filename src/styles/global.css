@@ -1,7 +1,8 @@
 * { box-sizing: border-box; }
-html { min-width: 320px; background: var(--canvas); }
+html { min-width: 320px; background: var(--canvas); font-family: var(--font-body); }
 body { margin: 0; color: var(--text-primary); background: var(--canvas); font: 400 14px/24px var(--font-body); -webkit-font-smoothing: antialiased; }
-button, input { font: inherit; }
+button, input, select, textarea { font: inherit; }
+code, kbd, samp, pre { font-family: inherit; }
 a, button { -webkit-tap-highlight-color: transparent; }
 :focus-visible { outline: 2px solid var(--accent-text); outline-offset: 3px; }
 ::selection { color: var(--on-accent); background: var(--accent-bg); }

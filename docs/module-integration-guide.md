@@ -1,6 +1,6 @@
 # 外部模块接入 my-dashboard 指引
 
-适用版本：my-dashboard V0.2（npm 0.2.0）。本文面向在另一个项目中开发工具、希望把工具 UI 放进 my-dashboard 的开发者。
+适用版本：my-dashboard V0.3（npm 0.3.0）；沿用 V0.2 引入的组件与清单协议。本文面向在另一个项目中开发工具、希望把工具 UI 放进 my-dashboard 的开发者。
 
 子模块负责导出 React 组件并部署自己的构建产物；my-dashboard 负责外壳、菜单、路由和主题。子模块源码不用搬到宿主仓库，也不用和宿主打成同一个包。Module Federation 连接的是前端组件，子模块后端仍需单独提供 API。
 
@@ -91,7 +91,7 @@ export default defineConfig({
 'react-router': { singleton: true, requiredVersion: '8.5.0' },
 ```
 
-子模块不使用 React Router 时，无需安装或共享它。现有项目若通过其他包名或其他 Router 封装访问路由，还需核对其依赖与上下文，不要只靠再创建一个 BrowserRouter 规避问题。
+子模块安装并共享 React Router 后，也可以使用宿主路由上下文；上面的参数协议不依赖子模块额外安装路由库。子模块不使用 React Router 时，无需安装或共享它。现有项目若通过其他包名或其他 Router 封装访问路由，还需核对其依赖与上下文，不要只靠再创建一个 BrowserRouter 规避问题。
 
 ## 3. 导出一个可被宿主渲染的组件
 
@@ -144,6 +144,7 @@ export default function DashboardModule({
 ```css
 .panel {
   padding: 24px;
+  font-family: var(--font-body);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--panel);
@@ -163,7 +164,7 @@ export default function DashboardModule({
 
 导出的文件只负责组件，不调用 `createRoot`，不再包一层 `BrowserRouter`。原项目若需要独立运行，可保留 `main.tsx` 的挂载和独立入口，通过另一层包装复用业务组件。被宿主导入的入口不要直接依赖只在原项目 main.tsx 中初始化的 provider、样式或全局变量；需要的业务 provider 应由模块入口显式提供。
 
-my-dashboard 已提供侧栏、顶栏和页面标题，通常只导出工具内容区。CSS Modules 或独有类名前缀可减少样式冲突；避免远程样式重置 `html`、`body` 或所有按钮。其他主题变量见 [tokens.css](../src/styles/tokens.css)。
+my-dashboard 已提供侧栏、顶栏和页面标题，通常只导出工具内容区。CSS Modules 或独有类名前缀可减少样式冲突；避免远程样式重置 `html`、`body` 或所有按钮。全站字体为 `PingFang SC`；模块应继承宿主字体或使用 `font-family: var(--font-body)`，不要另设其他文字字体。未安装苹方的设备回退系统 sans-serif。背景、标题和强调色还可复用 `--canvas`、`--panel`、`--heading`、`--text-primary`、`--text-secondary`、`--accent-bg` 等语义变量；完整定义见 [tokens.css](../src/styles/tokens.css)。
 
 ## 4. 在本地构建和联调
 
@@ -217,7 +218,23 @@ http://127.0.0.1:8081/remoteEntry.js
 | `entry` | 部署后可访问的 manifest，也可直接填写 ESM 格式的 remoteEntry.js 地址 |
 | `id: ai-daily` | 宿主路由标识，最终路径 `/tools/ai-daily`；可以与 remote 名不同 |
 
-`id` 必须唯一、小写字母开头，可含数字和连字符。多个工具可以来自同一个远程应用，但同一 `remote` 名只能对应一个入口地址。`enabled: false` 会隐藏入口并使其工具路由显示 404。清单的 `version: 1` 是格式版本，与产品 V0.2 无关。完整约束见 [宿主接入说明](modules.md)。
+清单格式为 `version: 1` 与 `modules` 数组；这里的 version 是格式版本，与产品 V0.2 无关。数组顺序就是侧栏顺序，字段要求如下：
+
+| 字段 | 要求与默认行为 |
+| --- | --- |
+| `id` | 必填且唯一，小写字母开头，后续可含小写字母、数字、连字符 |
+| `title` | 必填的非空文字，同时作为侧栏和页面标题 |
+| `description` | 可选字符串，显示在宿主页面标题下方 |
+| `remote` | 必填，与远程 name 一致；字母或下划线开头，后续可含字母、数字、下划线 |
+| `entry` | 必填，可访问的 ESM remoteEntry.js 或 mf-manifest.json；仅允许 HTTP(S)，不接受地址中的账号密码或 `#fragment` |
+| `exposed` | 必填，与 exposes 的键一致；以 `./` 开头，路径段可含字母、数字、下划线、连字符，不使用 `..` |
+| `enabled` | 可选布尔值，省略时启用；false 隐藏入口且其工具路由返回宿主 404 |
+
+同一远程应用可以导出多个工具，但每个工具的 id 不同，同一 remote 名必须使用相同入口地址。
+
+entry 也支持相对地址：相对路径按宿主应用的 base 解析，当前 base 为 `/`。例如 `/modules/ai-daily/mf-manifest.json` 指向宿主同域的资源，适合已有同域反向代理的部署；只修改 entry 不会自动创建代理或托管远程文件。
+
+宿主启动时读取并校验整份清单；重复 id、冲突入口、非法字段或错误 JSON 会使整份清单加载失败，不会只启用其中一部分。清单读取超过 10 秒会报错，可重新加载工具列表。通过校验后只生成菜单，访问工具时才加载远程组件；加载超过 15 秒或组件渲染失败时显示错误提示，当前“重新加载”会刷新整个页面。侧栏和主题切换仍可用；修复服务或清单后再重试。
 
 目前运行的是 my-dashboard Nginx 容器，修改本机 public 文件后，还需在 my-dashboard 项目根目录执行：
 
@@ -226,6 +243,8 @@ docker cp public/modules.json my-dashboard:/usr/share/nginx/html/modules.json
 ```
 
 若终端找不到 docker，可使用 `/Users/jiamingyuan/.docker/bin/docker`。仅更新清单无需重建宿主或重启 Nginx；保留本机清单修改，以免下次构建覆盖。宿主在 Vite 开发模式运行时，则直接读取自己的 public 文件，刷新即可。
+
+宿主 build 会将 public/modules.json 原样复制为 dist/modules.json。[Nginx 配置](../ops/nginx/default.conf) 为 `/modules.json` 设置 no-store，并将 `/tools/*` 等应用路由回退到 index.html；assets 缺失仍返回 404。修改宿主代码、共享依赖或打包配置时，需要重新构建并发布完整 dist，不能只同步清单。
 
 在浏览器刷新 `http://localhost:8080`，侧栏应出现“AI 日报”，点击后访问 `/tools/ai-daily`。宿主不会扫描其他仓库或自动发现模块，菜单来自这份清单。
 
@@ -262,7 +281,19 @@ https://tools.example.com/ai-daily/mf-manifest.json
 - JS 返回正确的 JavaScript MIME，缺失的入口或静态文件返回 404，不要套用 SPA 的 index.html 回退。
 - 入口和 manifest 使用 no-cache 或 no-store；带内容哈希的 chunks 可以长期缓存。发布时先上传资源，最后更新入口/manifest，并保留旧 chunks 供已打开页面使用。
 
-远程代码与宿主在同一页面执行，可访问 DOM 与浏览器存储。当前接入模型适合自己的可信工具；错误边界不隔离全局样式、全局副作用或浏览器权限。
+远程代码与宿主在同一页面执行，可访问 DOM 与浏览器存储。当前接入模型适合自己的可信工具；错误边界不隔离全局样式、全局副作用或浏览器权限。如果需要展示不受信任的第三方页面，应另行设计 iframe 隔离方案。
+
+## 8. 宿主侧回归检查
+
+宿主集成或共享依赖有变化时，可在 my-dashboard 项目根目录执行：
+
+```sh
+npm run lint
+npm run build
+npm run test:e2e -- --reporter=line --output=/tmp/my-dashboard-e2e
+```
+
+这里将截图与失败轨迹放到系统临时目录；Vite preview 仅用于本地验证。自动化测试会在 4175 启动宿主生产预览、在 4176 启动真正构建的测试远程，覆盖共享 React Hooks、远程 CSS 和字体继承、主题/子路由、停用配置、清单校验及加载失败恢复，同时运行外壳回归。测试 fixture 不会加入正式构建，也不代表已验证所有实际业务模块。
 
 ## 常见问题
 
@@ -278,4 +309,4 @@ https://tools.example.com/ai-daily/mf-manifest.json
 | 改完代码仍看到旧模块 | 子模块是否重新构建并发布、入口/manifest 是否被缓存，宿主页面是否刷新 |
 | API 返回宿主 HTML 或 404 | 相对 API 路径是否意外指向宿主；单独核对后端地址、反向代理、CORS 和鉴权 |
 
-宿主实现与当前协议见 [modules.md](modules.md)、[组件类型](../src/modules/types.ts)、[运行时](../src/modules/runtime.ts)。插件配置可参考 [Module Federation 官方 Vite 文档](https://module-federation.io/integrations/build-tool/vite.html)；本文以仓库当前锁定版本和既有联通测试为依据，升级插件时重新核对配置。
+宿主实现与当前协议可对照 [清单解析器](../src/modules/registry.ts)、[组件类型](../src/modules/types.ts)、[运行时](../src/modules/runtime.ts)。插件配置可参考 [Module Federation 官方 Vite 文档](https://module-federation.io/integrations/build-tool/vite.html)；本文以仓库当前锁定版本和既有联通测试为依据，升级插件时重新核对配置。

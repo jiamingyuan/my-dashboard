@@ -23,6 +23,7 @@ test('runtime registry loads an actual remote, shared React hooks, CSS, theme an
   await page.getByRole('link', { name: '测试工具', exact: true }).click()
   await expect(page.getByRole('heading', { name: '远程组件已就绪' })).toBeVisible()
   await expect(page.getByTestId('remote-panel')).toHaveCSS('padding', '24px')
+  await expect(page.getByTestId('remote-panel')).toHaveCSS('font-family', /PingFang SC/)
   await page.getByRole('button', { name: '远程计数：0', exact: true }).click()
   await expect(page.getByRole('button', { name: '远程计数：1', exact: true })).toBeVisible()
   await expect(page.getByTestId('remote-theme')).toHaveText('night')

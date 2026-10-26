@@ -1,4 +1,13 @@
 {
   "version": 1,
-  "modules": []
+  "modules": [
+    {
+      "id": "media-keeper",
+      "title": "media-keeper",
+      "remote": "media_keeper",
+      "entry": "/media-keeper/mf-manifest.json",
+      "exposed": "./DashboardModule",
+      "enabled": true
+    }
+  ]
 }

@@ -3,7 +3,7 @@
 .workspace, .separator { color: var(--text-secondary); }
 .flexible { flex: 1; min-width: 0; }
 .searchSpace { width: 264px; height: 38px; flex: 0 0 264px; pointer-events: none; }
-.date { width: 142px; height: 24px; flex: 0 0 142px; display: flex; justify-content: flex-end; color: var(--text-secondary); font: 500 11px/18px var(--font-latin); }
+.date { width: 142px; height: 24px; flex: 0 0 142px; display: flex; justify-content: flex-end; color: var(--text-secondary); font: 500 11px/18px var(--font-body); }
 .menu { display: none; }
 @media (max-width: 1199px) {
   .topbar { padding: 0 24px; }

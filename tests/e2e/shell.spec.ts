@@ -3,6 +3,7 @@ import { readFile, stat } from 'node:fs/promises'
 
 const test = base.extend<{ runtimeGuard: void }>({
   runtimeGuard: [async ({ page }, use) => {
+    await page.route('**/modules.json', route => route.fulfill({ json: { version: 1, modules: [] } }))
     const errors: string[] = []
     const externalRequests: string[] = []
     page.on('pageerror', error => errors.push(error.message))
@@ -73,8 +74,14 @@ for (const theme of ['night', 'morning'] as const) {
     expect(brandBox!.width).toBeCloseTo(theme === 'morning' ? 20 : 24, 1)
     expect(homeBox!.width).toBeCloseTo(theme === 'morning' ? 24 : 19.6, 1)
     expect(homeBox!.height).toBeCloseTo(theme === 'morning' ? 24 : 21.6, 1)
-    const fonts = await page.evaluate(() => Array.from(document.fonts).filter(font => font.status === 'loaded').map(font => `${font.family.replaceAll('"', '')}:${font.weight}`))
-    for (const font of ['Noto Sans SC:400', 'Noto Sans SC:500', 'Manrope:500', 'Manrope:600']) expect(fonts).toContain(font)
+    const fonts = await page.locator('body *').evaluateAll(elements => elements
+      .filter((element): element is HTMLElement => element instanceof HTMLElement && Boolean(element.innerText.trim()) && element.getClientRects().length > 0)
+      .map(element => getComputedStyle(element).fontFamily.split(',')[0].trim().replaceAll('"', '')))
+    expect(fonts.length).toBeGreaterThan(0)
+    expect([...new Set(fonts)]).toEqual(['PingFang SC'])
+    const fontRequests = await page.evaluate(() => performance.getEntriesByType('resource')
+      .map(entry => entry.name).filter(url => /\.(woff2?|ttf|otf)(?:[?#]|$)/i.test(url)))
+    expect(fontRequests, 'Use the system font without downloading web fonts').toEqual([])
     await expect(page.locator('body')).toHaveCSS('background-color', theme === 'morning' ? 'rgb(238, 233, 223)' : 'rgb(24, 25, 22)')
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
     const screenshot = testInfo.outputPath(`${theme}.png`)
@@ -193,12 +200,11 @@ test('medium viewport and switching to desktop keep navigation usable', async ({
   await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden')
 })
 
-test('shipped icons and font licenses are present, with no temporary asset references', async () => {
+test('shipped icons are present, with no temporary asset references', async () => {
   for (const mode of ['night', 'morning']) for (const name of ['brand', 'home']) {
     const asset = `src/assets/icons/${mode}/${name}.svg`
     expect((await stat(asset)).size).toBeGreaterThan(100)
     expect(await readFile(asset, 'utf8')).toMatch(/<svg[^>]*width="[^"\s]+"[^>]*height="[^"\s]+"/)
   }
-  for (const family of ['manrope', 'noto-sans-sc']) expect((await stat(`src/assets/fonts/${family}-LICENSE.txt`)).size).toBeGreaterThan(100)
   expect(await readFile('src/components/ui/ThemedIcon.tsx', 'utf8')).not.toContain('figma.com/api')
 })

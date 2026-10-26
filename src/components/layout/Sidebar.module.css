@@ -1,8 +1,8 @@
 .sidebar { width: 248px; min-height: 100dvh; display: flex; flex-direction: column; gap: 24px; padding: 32px 20px 24px; background: var(--canvas); }
 .brand { display: flex; align-items: center; gap: 12px; height: 52px; flex: none; }
 .mark { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border-radius: var(--radius-sm); background: var(--accent-bg); }
-.wordmark { margin: 0; color: var(--heading); font: 600 18px/26px var(--font-latin); white-space: nowrap; }
-.subtitle { margin: 0; color: var(--text-secondary); font: 500 11px/18px var(--font-latin); white-space: nowrap; }
+.wordmark { margin: 0; color: var(--heading); font: 600 18px/26px var(--font-body); white-space: nowrap; }
+.subtitle { margin: 0; color: var(--text-secondary); font: 500 11px/18px var(--font-body); white-space: nowrap; }
 .group { display: flex; flex-direction: column; gap: 8px; }
 .caption { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 20px; }
 .link { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 12px; border-radius: var(--radius-sm); color: var(--text-secondary); text-decoration: none; font-size: 14px; font-weight: 500; line-height: 22px; }
@@ -10,7 +10,7 @@
 .noTools { margin: 0; padding: 12px; color: var(--text-secondary); font-size: 12px; line-height: 20px; }
 .userArea { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--raised); }
 .user { display: flex; gap: 12px; align-items: center; height: 48px; }
-.avatar { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: var(--radius-sm); background: var(--sand); color: var(--avatar-text); font: 600 18px/26px var(--font-latin); }
+.avatar { width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: var(--radius-sm); background: var(--sand); color: var(--avatar-text); font: 600 18px/26px var(--font-body); }
 .username { margin: 0; font-size: 14px; font-weight: 500; line-height: 22px; }
 .account { margin: 0; color: var(--text-secondary); font-size: 12px; line-height: 20px; }
 @media (max-width: 767px) { .sidebar { min-height: calc(100dvh - 56px); padding-top: 16px; } }

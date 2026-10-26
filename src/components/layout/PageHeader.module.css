@@ -6,3 +6,7 @@
 .welcome .small { color: var(--text-secondary); font-size: 12px; line-height: 20px; }
 @media (max-width: 1199px) { .header { flex-wrap: wrap; gap: 16px; } }
 @media (max-width: 767px) { .header { align-items: flex-start; } .welcome { flex-basis: 100%; } }
+
+.header h1:last-child { margin-bottom: 0; }
+
+.compact { min-height: 40px; }
